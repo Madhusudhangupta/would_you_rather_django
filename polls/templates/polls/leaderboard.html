@@ -1,0 +1,576 @@
+{% extends 'polls/base.html' %}
+{% load static %}
+
+{% block title %}Leaderboard - Would You Rather{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="has-text-centered mb-5">
+            <h1 class="title is-1">
+                <span class="icon is-large has-text-warning">
+                    <i class="fas fa-trophy"></i>
+                </span>
+                Leaderboard
+            </h1>
+            <p class="subtitle is-4">Top performers ranked by total score</p>
+        </div>
+        
+        {% if leaderboard %}
+        <div class="columns is-multiline">
+            {% for entry in leaderboard %}
+            <div class="column is-12">
+                <div class="card leadboard-panel {% if entry.rank == 1 %}first-place{% elif entry.rank == 2 %}second-place{% elif entry.rank == 3 %}third-place{% endif %}">
+                    <header class="card-header">
+                        <p class="card-header-title">
+                            <span class="rank-display">
+                                {% if entry.rank == 1 %}
+                                <span class="rank-icon gold">
+                                    <i class="fas fa-crown"></i>
+                                </span>
+                                <span class="rank-number">#1&nbsp;</span>
+                                {% elif entry.rank == 2 %}
+                                <span class="rank-icon silver">
+                                    <i class="fas fa-medal"></i>
+                                </span>
+                                <span class="rank-number">#2&nbsp;</span>
+                                {% elif entry.rank == 3 %}
+                                <span class="rank-icon bronze">
+                                    <i class="fas fa-award"></i>
+                                </span>
+                                <span class="rank-number">#3&nbsp;</span>
+                                {% else %}
+                                <span class="rank-icon default">
+                                    <i class="fas fa-user-circle"></i>
+                                </span>
+                                <span class="rank-number">#{{ entry.rank }}&nbsp;</span>
+                                {% endif %}
+                            </span>
+                            <span class="username-display">{{ entry.user.username }}</span>
+                            {% if entry.user == user %}
+                            <span class="tag is-primary is-light ml-2">You</span>
+                            {% endif %}
+                        </p>
+                    </header>
+                    <div class="card-content">
+                        <div class="media">
+                            <div class="media-left">
+                                <figure class="image is-96x96">
+                                    {% if entry.user.avatar %}
+                                    <img src="{{ entry.user.avatar.url }}" alt="{{ entry.user.username }}'s Avatar" class="is-rounded avatar-image">
+                                    {% else %}
+                                    <img src="{% static 'polls/images/default-avatar.png' %}" alt="{{ entry.user.username }}'s Avatar" class="is-rounded avatar-image">
+                                    {% endif %}
+                                </figure>
+                            </div>
+                            <div class="media-content">
+                                <div class="content">
+                                    {% if entry.user.first_name and entry.user.last_name %}
+                                    <p class="title is-5 mb-5">
+                                        {{ entry.user.first_name }} {{ entry.user.last_name }}
+                                    </p>
+                                    {% endif %}
+                                    {% if entry.user.email %}
+                                    <p class="subtitle is-6 has-text-grey-dark mb-3">
+                                        <span class="icon-text">
+                                            <span class="icon is-small">
+                                                <i class="fas fa-envelope"></i>
+                                            </span>
+                                            <span>{{ entry.user.email }}</span>
+                                        </span>
+                                    </p>
+                                    {% endif %}
+                                    
+                                    <ul class="list leadboard-stats">
+                                        <li>
+                                            <span class="icon-text stat-item">
+                                                <span class="icon has-text-info">
+                                                    <i class="fas fa-question-circle"></i>
+                                                </span>
+                                                <span class="stat-label">Questions Asked:</span>
+                                                <span class="tag is-info is-medium ml-2">{{ entry.questions_asked }}</span>
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span class="icon-text stat-item">
+                                                <span class="icon has-text-success">
+                                                    <i class="fas fa-check-circle"></i>
+                                                </span>
+                                                <span class="stat-label">Questions Answered:</span>
+                                                <span class="tag is-success is-medium ml-2">{{ entry.questions_answered }}</span>
+                                            </span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="media-right">
+                                <div class="score-panel {% if entry.rank <= 3 %}podium-score{% endif %}">
+                                    <div class="has-text-centered">
+                                        <p class="heading score-heading">Total Score</p>
+                                        <p class="title is-1 score-value">{{ entry.total_score }}</p>
+                                        {% if entry.rank <= 3 %}
+                                        <div class="stars mt-3">
+                                            {% if entry.rank == 1 %}
+                                            <span class="icon has-text-warning"><i class="fas fa-star"></i></span>
+                                            <span class="icon has-text-warning"><i class="fas fa-star"></i></span>
+                                            <span class="icon has-text-warning"><i class="fas fa-star"></i></span>
+                                            {% elif entry.rank == 2 %}
+                                            <span class="icon has-text-info"><i class="fas fa-star"></i></span>
+                                            <span class="icon has-text-info"><i class="fas fa-star"></i></span>
+                                            {% elif entry.rank == 3 %}
+                                            <span class="icon has-text-success"><i class="fas fa-star"></i></span>
+                                            {% endif %}
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% if entry.rank <= 3 %}
+                    <footer class="card-footer">
+                        <div class="card-footer-item achievement-message">
+                            <span class="icon-text">
+                                <span class="icon achievement-icon">
+                                    <i class="fas fa-fire"></i>
+                                </span>
+                                <span class="achievement-text">
+                                    {% if entry.rank == 1 %}
+                                    🎉 Champion! Keep up the amazing work!
+                                    {% elif entry.rank == 2 %}
+                                    🎯 Runner Up! You're doing great!
+                                    {% elif entry.rank == 3 %}
+                                    💪 Third Place! Keep climbing!
+                                    {% endif %}
+                                </span>
+                            </span>
+                        </div>
+                    </footer>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- How Scores Work Section -->
+        <div class="box scoring-info mt-6">
+            <div class="content has-text-centered">
+                <h3 class="title is-4">
+                    <span class="icon has-text-primary">
+                        <i class="fas fa-info-circle"></i>
+                    </span>
+                    <span>How Scores Are Calculated</span>
+                </h3>
+                <p class="subtitle is-6 mb-4">
+                    Your total score is the sum of your participation
+                </p>
+                
+                <div class="columns is-mobile is-multiline is-centered scoring-formula">
+                    <div class="column is-narrow">
+                        <div class="box formula-box questions-box">
+                            <span class="icon has-text-info">
+                                <i class="fas fa-question-circle fa-3x"></i>
+                            </span>
+                            <p class="has-text-weight-bold mt-3">Questions Asked</p>
+                        </div>
+                    </div>
+                    <div class="column is-narrow formula-operator">
+                        <p class="title is-2 has-text-primary">+</p>
+                    </div>
+                    <div class="column is-narrow">
+                        <div class="box formula-box answers-box">
+                            <span class="icon has-text-success">
+                                <i class="fas fa-check-circle fa-3x"></i>
+                            </span>
+                            <p class="has-text-weight-bold mt-3">Questions Answered</p>
+                        </div>
+                    </div>
+                    <div class="column is-narrow formula-operator">
+                        <p class="title is-2 has-text-primary">=</p>
+                    </div>
+                    <div class="column is-narrow">
+                        <div class="box formula-box total-box">
+                            <span class="icon has-text-warning">
+                                <i class="fas fa-trophy fa-3x"></i>
+                            </span>
+                            <p class="has-text-weight-bold mt-3">Total Score</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="notification is-primary is-light mt-4">
+                    <p class="has-text-weight-semibold">
+                        <span class="icon">
+                            <i class="fas fa-rocket"></i>
+                        </span>
+                        Participate more to climb the leaderboard!
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        {% else %}
+        <!-- Empty State -->
+        <div class="columns is-centered">
+            <div class="column is-6">
+                <div class="notification is-info has-text-centered empty-state">
+                    <span class="icon is-large mb-3">
+                        <i class="fas fa-users fa-3x"></i>
+                    </span>
+                    <p class="title is-4 mb-3">No Users Found</p>
+                    <p class="subtitle is-6">The leaderboard is empty. Be the first to participate!</p>
+                    <a href="{% url 'new_question' %}" class="button is-primary mt-3">
+                        <span class="icon">
+                            <i class="fas fa-plus-circle"></i>
+                        </span>
+                        <span>Create Your First Question</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<style>
+/* Leaderboard Panel Styles */
+.leadboard-panel {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    background: white;
+    border-left: 5px solid #e0e0e0;
+}
+
+.leadboard-panel:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* Podium Styles */
+.leadboard-panel.first-place {
+    border-left-color: #ffd700;
+    background: linear-gradient(to right, #fffef7 0%, #ffffff 100%);
+}
+
+.leadboard-panel.second-place {
+    border-left-color: #c0c0c0;
+    background: linear-gradient(to right, #fafafa 0%, #ffffff 100%);
+}
+
+.leadboard-panel.third-place {
+    border-left-color: #cd7f32;
+    background: linear-gradient(to right, #fff8f3 0%, #ffffff 100%);
+}
+
+/* Card Header */
+.leadboard-panel .card-header {
+    background-color: rgba(0, 0, 0, 0.02);
+    border-bottom: 2px solid rgba(0, 0, 0, 0.05);
+    padding: 1.25rem 1.5rem;
+}
+
+.leadboard-panel.first-place .card-header {
+    background: linear-gradient(135deg, #fff9e6 0%, #fffef7 100%);
+}
+
+.leadboard-panel.second-place .card-header {
+    background: linear-gradient(135deg, #f5f5f5 0%, #fafafa 100%);
+}
+
+.leadboard-panel.third-place .card-header {
+    background: linear-gradient(135deg, #fff4ed 0%, #fff8f3 100%);
+}
+
+/* Align icons parellel to text */
+.icon-text {
+    display: inline-flex;
+    align-items: center; /* centers icon and text */
+    gap: 0.25rem; /* optional spacing */
+}
+
+/* Rank Display */
+.rank-display {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.rank-icon {
+    font-size: 1.75rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+}
+
+.rank-icon.gold {
+    color: #ffd700;
+    text-shadow: 0 2px 4px rgba(255, 215, 0, 0.3);
+}
+
+.rank-icon.silver {
+    color: #c0c0c0;
+    text-shadow: 0 2px 4px rgba(192, 192, 192, 0.3);
+}
+
+.rank-icon.bronze {
+    color: #cd7f32;
+    text-shadow: 0 2px 4px rgba(205, 127, 50, 0.3);
+}
+
+.rank-icon.default {
+    color: #7a7a7a;
+}
+
+.rank-number {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #363636;
+}
+
+.username-display {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #363636;
+}
+
+/* Avatar */
+.avatar-image {
+    width: 96px;
+    height: 96px;
+    object-fit: cover;
+    border: 4px solid #f5f5f5;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.leadboard-panel:hover .avatar-image {
+    transform: scale(1.05);
+}
+
+.leadboard-panel.first-place .avatar-image {
+    border-color: #ffd700;
+}
+
+.leadboard-panel.second-place .avatar-image {
+    border-color: #c0c0c0;
+}
+
+.leadboard-panel.third-place .avatar-image {
+    border-color: #cd7f32;
+}
+
+/* Stats List */
+.list.leadboard-stats {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.list.leadboard-stats li {
+    padding: 0.875rem 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.list.leadboard-stats li:last-child {
+    border-bottom: none;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.stat-label {
+    font-weight: 600;
+    color: #4a4a4a;
+    margin-left: 0.5rem;
+}
+
+/* Score Panel */
+.score-panel {
+    background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+    border-radius: 12px;
+    padding: 1.75rem 1.5rem;
+    min-width: 180px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+}
+
+.score-panel.podium-score {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.score-heading {
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #7a7a7a;
+    margin-bottom: 0.5rem;
+}
+
+.podium-score .score-heading {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.score-value {
+    color: #667eea;
+    font-weight: 800;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 0 !important;
+    line-height: 1;
+}
+
+.podium-score .score-value {
+    color: #ffffff;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.stars {
+    display: flex;
+    justify-content: center;
+    gap: 0.25rem;
+}
+
+/* Achievement Message */
+.achievement-message {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    padding: 1rem;
+    font-weight: 600;
+}
+
+.achievement-icon {
+    color: #ff6b6b;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.achievement-text {
+    font-size: 1.05rem;
+}
+
+/* Scoring Info Section */
+.scoring-info {
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+    border: 2px solid #e9ecef;
+    border-radius: 16px;
+    padding: 2.5rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.scoring-formula {
+    margin: 2rem 0;
+}
+
+.formula-box {
+    background: white;
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    padding: 1.5rem;
+    min-width: 180px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.formula-box:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.questions-box {
+    border-color: #3298dc;
+}
+
+.questions-box:hover {
+    background: linear-gradient(135deg, #e8f4fd 0%, #ffffff 100%);
+}
+
+.answers-box {
+    border-color: #48c774;
+}
+
+.answers-box:hover {
+    background: linear-gradient(135deg, #effaf3 0%, #ffffff 100%);
+}
+
+.total-box {
+    border-color: #ffd700;
+}
+
+.total-box:hover {
+    background: linear-gradient(135deg, #fffef7 0%, #ffffff 100%);
+}
+
+.formula-operator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Empty State */
+.empty-state {
+    padding: 3rem;
+    border-radius: 16px;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    .media {
+        display: block;
+    }
+    
+    .media-left,
+    .media-content,
+    .media-right {
+        display: block;
+        margin: 0 auto;
+    }
+    
+    .media-left {
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+    
+    .media-right {
+        margin-top: 1.5rem;
+    }
+    
+    .score-panel {
+        min-width: 100%;
+    }
+    
+    .formula-box {
+        min-width: 140px;
+    }
+    
+    .formula-operator .title {
+        font-size: 1.5rem;
+    }
+    
+    .rank-icon {
+        font-size: 1.5rem;
+        width: 36px;
+        height: 36px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .scoring-formula .column {
+        flex: 100%;
+    }
+    
+    .formula-operator {
+        margin: 0.5rem 0;
+    }
+}
+</style>
+{% endblock %}

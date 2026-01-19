@@ -1,0 +1,95 @@
+{% extends 'polls/base.html' %}
+{% load static %}
+
+{% block title %}Login - Would You Rather{% endblock %}
+
+{% block content %}
+<section class="hero is-fullheight is-primary">
+    <div class="hero-body">
+        <div class="container">
+            <div class="columns is-centered">
+                <div class="column is-5-tablet is-4-desktop">
+                    <div class="card question-panel">
+                        <header class="card-header has-background-primary">
+                            <p class="card-header-title has-text-white is-centered">
+                                <span class="icon"><i class="fas fa-sign-in-alt"></i></span>
+                                <span>Login</span>
+                            </p>
+                        </header>
+                        <div class="card-content">
+                            <div class="content has-text-centered mb-5">
+                                <figure class="image is-128x128 is-inline-block">
+                                    <img src="{% static 'polls/images/default-avatar.png' %}" alt="Login-icon" class="is-rounded">
+                                </figure>
+                                <h2 class="title is-4 mt-3">Welcome Back!</h2>
+                                <p class="subtitle is-6">Sign in to continue</p>
+                            </div>
+                            
+                            <form method="post" novalidate>
+                                {% csrf_token %}
+                                
+                                <div class="field">
+                                    <label class="label">Username</label>
+                                    <div class="control has-icons-left">
+                                        {{ form.username }}
+                                        <span class="icon is-small is-left">
+                                            <i class="fas fa-user"></i>
+                                        </span>
+                                    </div>
+                                    {% if form.username.errors %}
+                                        {% for error in form.username.errors %}
+                                        <p class="help is-danger">{{ error }}</p>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+
+                                <div class="field">
+                                    <label class="label">Password</label>
+                                    <div class="control has-icons-left">
+                                        {{ form.password }}
+                                        <span class="icon is-small is-left">
+                                            <i class="fas fa-lock"></i>
+                                        </span>
+                                    </div>
+                                    {% if form.password.errors %}
+                                        {% for error in form.password.errors %}
+                                        <p class="help is-danger">{{ error }}</p>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+
+                                {% if form.non_field_errors %}
+                                <div class="notification is-danger is-light">
+                                    {% for error in form.non_field_errors %}
+                                    {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+
+                                <div class="field">
+                                    <div class="control">
+                                        <button type="submit" class="button is-primary is-fullwidth">
+                                            <span class="icon"><i class="fas fa-sign-in-alt"></i></span>
+                                            <span>Login</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                            
+                            <hr>
+                            
+                            <div class="has-text-centered">
+                                <p>Don't have an account?</p>
+                                <a href="{% url 'signup' %}" class="button is-link is-outlined is-fullwidth mt-3">
+                                    <span class="icon"><i class="fas fa-user-plus"></i></span>
+                                    <span>Create Account</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

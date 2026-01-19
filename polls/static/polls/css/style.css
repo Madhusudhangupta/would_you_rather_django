@@ -1,0 +1,373 @@
+/* Custom styles for Would You Rather app */
+
+:root {
+    --primary-color: #667eea;
+    --secondary-color: #764ba2;
+    --success-color: #48c774;
+    --danger-color: #f14668;
+    --info-color: #3298dc;
+    --light-bg: #f5f5f5;
+}
+
+body {
+    background-color: var(--light-bg);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-content {
+    flex: 1;
+}
+
+/* Hero Sections */
+.hero.is-primary {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+}
+
+.hero.is-link {
+    background: linear-gradient(135deg, #3273dc 0%, #209cee 100%);
+}
+
+/* Cards */
+.card.question-panel {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.card.question-panel:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+.card.leadboard-panel {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.card.leadboard-panel:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+}
+
+.card-header-title {
+    color: #363636;
+    font-weight: 700;
+    justify-content: center;
+}
+
+.card-header.has-background-primary {
+    background-color: var(--primary-color) !important;
+}
+
+.card-header.has-background-link {
+    background-color: #3273dc !important;
+}
+
+/* Navbar */
+.navbar {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-items .navbar-item {
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+}
+
+.navbar-items .navbar-item.is-active {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.navbar-items .navbar-item:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+.navbar-avatar {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.username {
+    font-weight: 600;
+    color: #fff;
+    margin-right: 10px;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 0.75rem;
+}
+
+.dropdown-menu {
+    min-width: 200px;
+    margin-top: 0.5rem;
+}
+
+.dropdown-item.is-static {
+    background-color: #f5f5f5;
+}
+
+.dropdown-item.button.is-ghost {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+}
+
+.dropdown-item.button.is-ghost:hover {
+    background-color: #f5f5f5;
+}
+
+/* Forms */
+.input, .select select {
+    border-radius: 6px;
+    border: 2px solid #dbdbdb;
+    transition: border-color 0.2s ease;
+}
+
+.input:focus, .select select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.125em rgba(102, 126, 234, 0.25);
+}
+
+.input.is-danger {
+    border-color: var(--danger-color);
+}
+
+.help {
+    font-size: 0.875rem;
+}
+
+.help.is-danger {
+    color: var(--danger-color);
+}
+
+/* Buttons */
+.button {
+    border-radius: 6px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.button:hover {
+    transform: translateY(-1px);
+}
+
+.button.is-dark {
+    background-color: #363636;
+}
+
+.button.is-dark:hover {
+    background-color: #292929;
+}
+
+/* Leaderboard */
+.score-panel {
+    background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+    border-radius: 12px;
+    padding: 1.5rem;
+    min-width: 150px;
+    text-align: center;
+}
+
+.score-panel .title {
+    color: var(--primary-color);
+    margin-bottom: 0;
+    font-weight: 700;
+}
+
+.list.leadboard-stats {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.list.leadboard-stats li {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #e8e8e8;
+}
+
+.list.leadboard-stats li:last-child {
+    border-bottom: none;
+}
+
+/* Tabs */
+.tabs {
+    margin-bottom: 2rem;
+}
+
+.tabs li.is-active a {
+    border-bottom-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+.tab-content {
+    animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Rounded Images */
+.is-rounded {
+    border-radius: 50%;
+}
+
+.image.is-128x128 img.is-rounded {
+    border-radius: 50%;
+    object-fit: cover;
+    width: 128px;
+    height: 128px;
+}
+
+/* Progress Bars */
+.progress {
+    height: 1.5rem;
+    border-radius: 6px;
+}
+
+.progress.is-info::-webkit-progress-value {
+    background-color: var(--info-color);
+}
+
+.progress.is-success::-webkit-progress-value {
+    background-color: var(--success-color);
+}
+
+/* Radio Buttons */
+.radio input[type="radio"] {
+    margin-right: 0.5rem;
+}
+
+.radio {
+    display: block;
+    padding: 0.75rem;
+    margin-bottom: 0.5rem;
+    border: 2px solid #dbdbdb;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.radio:hover {
+    background-color: #f5f5f5;
+    border-color: var(--primary-color);
+}
+
+.radio input[type="radio"]:checked + span {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+/* Notifications */
+.notification {
+    border-radius: 6px;
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.notification.is-success {
+    background-color: #effaf3;
+    color: #257942;
+}
+
+.notification.is-danger {
+    background-color: #feecf0;
+    color: #cc0f35;
+}
+
+.notification.is-info {
+    background-color: #eff5fb;
+    color: #296fa8;
+}
+
+/* Footer */
+.footer {
+    background-color: #fafafa;
+    padding: 2rem 1.5rem;
+    margin-top: 3rem;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    .score-panel {
+        margin-top: 1rem;
+    }
+    
+    .navbar-menu {
+        background-color: #363636;
+    }
+    
+    .navbar-avatar {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .username {
+        font-size: 0.9rem;
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .navbar-item {
+        padding: 0.5rem 0.75rem;
+    }
+}
+
+/* Loading States */
+.is-loading {
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--secondary-color);
+}
+
+/* Utility Classes */
+.mt-3 {
+    margin-top: 1rem !important;
+}
+
+.mb-5 {
+    margin-bottom: 2rem !important;
+}
+
+.has-text-centered {
+    text-align: center;
+}

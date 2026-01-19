@@ -1,0 +1,200 @@
+{% extends 'polls/base.html' %}
+{% load static %}
+
+{% block title %}New Question - Would You Rather{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="columns is-centered">
+            <div class="column is-8-tablet is-6-desktop">
+                <div class="card">
+                    <header class="card-header has-background-primary">
+                        <p class="card-header-title has-text-white is-centered">
+                            <span class="icon">
+                                <i class="fas fa-plus-circle"></i>
+                            </span>
+                            <span>Create New Question</span>
+                        </p>
+                    </header>
+                    <div class="card-content">
+                        <div class="content has-text-centered mb-4">
+                            <span class="icon has-text-primary" style="font-size: 3rem;">
+                                <i class="fas fa-lightbulb"></i>
+                            </span>
+                            <h3 class="title is-4 mt-3">What's Your Dilemma?</h3>
+                            <p class="subtitle is-6">Create a thought-provoking "Would You Rather" question</p>
+                        </div>
+                        
+                        <form method="post" novalidate>
+                            {% csrf_token %}
+                            
+                            <div class="box has-background-light">
+                                <h4 class="title is-5 has-text-centered mb-4">
+                                    <span class="icon has-text-primary">
+                                        <i class="fas fa-question-circle"></i>
+                                    </span>
+                                    Would you rather...
+                                </h4>
+                                
+                                <div class="field">
+                                    <label class="label">
+                                        <span class="tag is-primary is-light">Option A</span>
+                                        {{ form.option_one_text.label }}
+                                    </label>
+                                    <div class="control has-icons-left">
+                                        <input 
+                                            type="text" 
+                                            name="option_one_text" 
+                                            class="input {% if form.option_one_text.errors %}is-danger{% endif %}" 
+                                            placeholder="Enter the first option (e.g., Have super strength)" 
+                                            value="{{ form.option_one_text.value|default:'' }}" 
+                                            required
+                                        >
+                                        <span class="icon is-small is-left">
+                                            <i class="fas fa-pen"></i>
+                                        </span>
+                                    </div>
+                                    {% if form.option_one_text.errors %}
+                                        {% for error in form.option_one_text.errors %}
+                                        <p class="help is-danger">
+                                            <span class="icon is-small">
+                                                <i class="fas fa-exclamation-triangle"></i>
+                                            </span>
+                                            {{ error }}
+                                        </p>
+                                        {% endfor %}
+                                    {% else %}
+                                    <p class="help">Minimum 3 characters</p>
+                                    {% endif %}
+                                </div>
+
+                                <div class="field has-text-centered my-4">
+                                    <span class="tag is-dark is-medium">
+                                        <span class="icon"><i class="fas fa-arrows-left-right"></i></span>
+                                        <span>OR</span>
+                                    </span>
+                                </div>
+
+                                <div class="field">
+                                    <label class="label">
+                                        <span class="tag is-link is-light">Option B</span>
+                                        {{ form.option_two_text.label }}
+                                    </label>
+                                    <div class="control has-icons-left">
+                                        <input 
+                                            type="text" 
+                                            name="option_two_text" 
+                                            class="input {% if form.option_two_text.errors %}is-danger{% endif %}" 
+                                            placeholder="Enter the second option (e.g., Be able to fly)" 
+                                            value="{{ form.option_two_text.value|default:'' }}" 
+                                            required
+                                        >
+                                        <span class="icon is-small is-left">
+                                            <i class="fas fa-pen"></i>
+                                        </span>
+                                    </div>
+                                    {% if form.option_two_text.errors %}
+                                        {% for error in form.option_two_text.errors %}
+                                        <p class="help is-danger">
+                                            <span class="icon is-small">
+                                                <i class="fas fa-exclamation-triangle"></i>
+                                            </span>
+                                            {{ error }}
+                                        </p>
+                                        {% endfor %}
+                                    {% else %}
+                                    <p class="help">Minimum 3 characters</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            {% if form.non_field_errors %}
+                            <div class="notification is-danger is-light">
+                                {% for error in form.non_field_errors %}
+                                <span class="icon">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                </span>
+                                {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+
+                            <div class="field is-grouped mt-5">
+                                <div class="control is-expanded">
+                                    <button type="submit" class="button is-dark is-fullwidth is-medium">
+                                        <span class="icon">
+                                            <i class="fas fa-paper-plane"></i>
+                                        </span>
+                                        <span>Submit Question</span>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="field is-grouped mt-3">
+                                <div class="control is-expanded">
+                                    <a href="{% url 'home' %}" class="button is-light is-fullwidth">
+                                        <span class="icon">
+                                            <i class="fas fa-arrow-left"></i>
+                                        </span>
+                                        <span>Cancel</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- Tips Section -->
+                <div class="box mt-4 has-background-info-light">
+                    <h4 class="title is-6">
+                        <span class="icon has-text-info">
+                            <i class="fas fa-lightbulb"></i>
+                        </span>
+                        Tips for Great Questions
+                    </h4>
+                    <div class="content is-small">
+                        <ul>
+                            <li><strong>Be creative:</strong> Think of interesting dilemmas</li>
+                            <li><strong>Be clear:</strong> Make both options easy to understand</li>
+                            <li><strong>Be balanced:</strong> Both options should be equally appealing</li>
+                            <li><strong>Be respectful:</strong> Keep it fun and appropriate</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.card {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.card-header.has-background-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.box.has-background-light {
+    background-color: #fafafa;
+    border-left: 4px solid #667eea;
+}
+
+.input:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.125em rgba(102, 126, 234, 0.25);
+}
+
+.button.is-dark {
+    background: linear-gradient(135deg, #363636 0%, #292929 100%);
+}
+
+.button.is-dark:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+</style>
+{% endblock %}

@@ -1,0 +1,305 @@
+{% extends 'polls/base.html' %}
+{% load static %}
+
+{% block title %}Question - Would You Rather{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="columns is-centered">
+            <div class="column is-8-tablet is-6-desktop">
+                <div class="card question-panel">
+                    <header class="card-header {% if show_results %}has-background-success-light{% else %}has-background-info-light{% endif %}">
+                        <p class="card-header-title">
+                            <span class="icon-text">
+                                <span class="icon">
+                                    {% if show_results %}
+                                    <i class="fas fa-chart-bar"></i>
+                                    {% else %}
+                                    <i class="fas fa-question-circle"></i>
+                                    {% endif %}
+                                </span>
+                                <span>
+                                    Would you rather {{ question.option_one_text }} or {{ question.option_two_text }}?
+                                </span>
+                            </span>
+                        </p>
+                    </header>
+                    <div class="card-content">
+                        <!-- Author Info -->
+                        <div class="content has-text-centered mb-5">
+                            <figure class="image is-128x128 is-inline-block mb-3">
+                                {% if question.author.avatar %}
+                                <img src="{{ question.author.avatar.url }}" alt="Author Avatar" class="is-rounded">
+                                {% else %}
+                                <img src="{% static 'polls/images/default-avatar.png' %}" alt="Author Avatar" class="is-rounded">
+                                {% endif %}
+                            </figure>
+                            <p class="subtitle is-6">
+                                <span class="icon-text">
+                                    <span class="icon has-text-info">
+                                        <i class="fas fa-user"></i>
+                                    </span>
+                                    <span>Asked by <strong>{{ question.author.username }}</strong></span>
+                                </span>
+                            </p>
+                            <p class="is-size-7 has-text-grey">
+                                <span class="icon-text">
+                                    <span class="icon">
+                                        <i class="fas fa-clock"></i>
+                                    </span>
+                                    <span>{{ question.created_at|timesince }} ago</span>
+                                </span>
+                            </p>
+                        </div>
+
+                        {% if show_results %}
+                        <!-- Show Results -->
+                        <div class="box has-background-light">
+                            <h3 class="title is-5 has-text-centered mb-4">
+                                <span class="icon has-text-success">
+                                    <i class="fas fa-poll"></i>
+                                </span>
+                                Results
+                            </h3>
+                            
+                            <!-- Option One Results -->
+                            <div class="mb-5">
+                                <div class="level is-mobile mb-2">
+                                    <div class="level-left">
+                                        <div class="level-item">
+                                            <div>
+                                                <span class="tag is-primary is-light">A</span>
+                                                <strong class="ml-2">
+                                                    {% if user_answer.option_selected == 'optionOne' %}
+                                                    <span class="icon has-text-success">
+                                                        <i class="fas fa-check-circle"></i>
+                                                    </span>
+                                                    {% endif %}
+                                                    {{ question.option_one_text }}
+                                                </strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="level-right">
+                                        <div class="level-item">
+                                            <span class="tag is-info is-large">{{ option_one_percentage }}%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <progress class="progress is-info" value="{{ option_one_votes }}" max="{{ total_votes }}">{{ option_one_percentage }}%</progress>
+                                <p class="help has-text-centered">
+                                    <span class="icon-text">
+                                        <span class="icon">
+                                            <i class="fas fa-users"></i>
+                                        </span>
+                                        <span>{{ option_one_votes }} out of {{ total_votes }} vote{{ total_votes|pluralize }}</span>
+                                    </span>
+                                </p>
+                            </div>
+
+                            <!-- Option Two Results -->
+                            <div>
+                                <div class="level is-mobile mb-2">
+                                    <div class="level-left">
+                                        <div class="level-item">
+                                            <div>
+                                                <span class="tag is-link is-light">B</span>
+                                                <strong class="ml-2">
+                                                    {% if user_answer.option_selected == 'optionTwo' %}
+                                                    <span class="icon has-text-success">
+                                                        <i class="fas fa-check-circle"></i>
+                                                    </span>
+                                                    {% endif %}
+                                                    {{ question.option_two_text }}
+                                                </strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="level-right">
+                                        <div class="level-item">
+                                            <span class="tag is-success is-large">{{ option_two_percentage }}%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <progress class="progress is-success" value="{{ option_two_votes }}" max="{{ total_votes }}">{{ option_two_percentage }}%</progress>
+                                <p class="help has-text-centered">
+                                    <span class="icon-text">
+                                        <span class="icon">
+                                            <i class="fas fa-users"></i>
+                                        </span>
+                                        <span>{{ option_two_votes }} out of {{ total_votes }} vote{{ total_votes|pluralize }}</span>
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="notification is-success is-light has-text-centered mt-4">
+                            <span class="icon">
+                                <i class="fas fa-check-circle"></i>
+                            </span>
+                            <span>You voted for: <strong>
+                                {% if user_answer.option_selected == 'optionOne' %}
+                                {{ question.option_one_text }}
+                                {% else %}
+                                {{ question.option_two_text }}
+                                {% endif %}
+                            </strong></span>
+                        </div>
+
+                        {% else %}
+                        <!-- Show Answer Form -->
+                        <div class="box has-background-light">
+                            <h3 class="title is-5 has-text-centered mb-4">
+                                <span class="icon has-text-primary">
+                                    <i class="fas fa-hand-pointer"></i>
+                                </span>
+                                Make Your Choice
+                            </h3>
+                            
+                            <form method="post">
+                                {% csrf_token %}
+                                
+                                <div class="field">
+                                    <div class="control">
+                                        <label class="radio radio-card">
+                                            <input type="radio" name="option_selected" value="optionOne" required>
+                                            <div class="radio-content">
+                                                <span class="tag is-primary is-medium">A</span>
+                                                <span class="ml-3">{{ question.option_one_text }}</span>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <div class="control">
+                                        <label class="radio radio-card">
+                                            <input type="radio" name="option_selected" value="optionTwo" required>
+                                            <div class="radio-content">
+                                                <span class="tag is-link is-medium">B</span>
+                                                <span class="ml-3">{{ question.option_two_text }}</span>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                {% if form.errors %}
+                                <div class="notification is-danger is-light">
+                                    <span class="icon">
+                                        <i class="fas fa-exclamation-circle"></i>
+                                    </span>
+                                    Please select an option before submitting.
+                                </div>
+                                {% endif %}
+
+                                <div class="field mt-5">
+                                    <div class="control">
+                                        <button type="submit" class="button is-primary is-fullwidth is-medium">
+                                            <span class="icon">
+                                                <i class="fas fa-check"></i>
+                                            </span>
+                                            <span>Submit Answer</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <footer class="card-footer">
+                        <a href="{% url 'home' %}" class="card-footer-item">
+                            <span class="icon">
+                                <i class="fas fa-arrow-left"></i>
+                            </span>
+                            <span>Back to Home</span>
+                        </a>
+                        {% if show_results %}
+                        <a href="{% url 'leaderboard' %}" class="card-footer-item">
+                            <span class="icon">
+                                <i class="fas fa-trophy"></i>
+                            </span>
+                            <span>View Leaderboard</span>
+                        </a>
+                        {% endif %}
+                    </footer>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.question-panel {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.card-header.has-background-info-light {
+    background: linear-gradient(135deg, #e8f4fd 0%, #d4ebf8 100%);
+}
+
+.card-header.has-background-success-light {
+    background: linear-gradient(135deg, #effaf3 0%, #d4f4dd 100%);
+}
+
+.radio-card {
+    display: block;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+    border: 3px solid #dbdbdb;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: white;
+}
+
+.radio-card:hover {
+    background-color: #f5f5f5;
+    border-color: #667eea;
+    transform: translateX(5px);
+}
+
+.radio-card input[type="radio"] {
+    display: none;
+}
+
+.radio-card input[type="radio"]:checked + .radio-content {
+    font-weight: 700;
+}
+
+.radio-card:has(input[type="radio"]:checked) {
+    background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+    border-color: #667eea;
+    border-width: 3px;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+}
+
+.radio-content {
+    display: flex;
+    align-items: center;
+}
+
+.progress {
+    height: 2rem;
+    border-radius: 8px;
+}
+
+.progress.is-info::-webkit-progress-value {
+    background: linear-gradient(90deg, #3298dc 0%, #209cee 100%);
+}
+
+.progress.is-success::-webkit-progress-value {
+    background: linear-gradient(90deg, #48c774 0%, #3ec46d 100%);
+}
+
+.image.is-128x128 img.is-rounded {
+    width: 128px;
+    height: 128px;
+    object-fit: cover;
+    border: 4px solid #f5f5f5;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+</style>
+{% endblock %}

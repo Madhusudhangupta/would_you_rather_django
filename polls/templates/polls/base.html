@@ -1,0 +1,171 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Would You Rather{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'polls/css/style.css' %}">
+</head>
+<body>
+    <!-- Navigation Bar - Only shown when authenticated -->
+    {% if user.is_authenticated %}
+    <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
+        <div class="container">
+            <div class="navbar-brand">
+                <a class="navbar-item" href="{% url 'home' %}">
+                    <strong>Would You Rather</strong>
+                </a>
+                
+                <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarMenu">
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                </a>
+            </div>
+
+            <div id="navbarMenu" class="navbar-menu">
+                <div class="navbar-start navbar-items">
+                    <a class="navbar-item {% if request.resolver_match.url_name == 'home' %}is-active{% endif %}" href="{% url 'home' %}">
+                        <span class="icon"><i class="fas fa-home"></i></span>
+                        <span>Home</span>
+                    </a>
+                    <a class="navbar-item {% if request.resolver_match.url_name == 'new_question' %}is-active{% endif %}" href="{% url 'new_question' %}">
+                        <span class="icon"><i class="fas fa-plus-circle"></i></span>
+                        <span>New Question</span>
+                    </a>
+                    <a class="navbar-item {% if request.resolver_match.url_name == 'leaderboard' %}is-active{% endif %}" href="{% url 'leaderboard' %}">
+                        <span class="icon"><i class="fas fa-trophy"></i></span>
+                        <span>Leaderboard</span>
+                    </a>
+                </div>
+
+                <div class="navbar-end">
+                    <div class="navbar-item">
+                        <div class="field is-grouped">
+                            <p class="control">
+                                <span class="username">{{ user.username }}</span>
+                            </p>
+                            <p class="control">
+                                {% if user.avatar %}
+                                <img src="{{ user.avatar.url }}" alt="User Avatar" class="is-rounded navbar-avatar">
+                                {% else %}
+                                <img src="{% static 'polls/images/default-avatar.png' %}" alt="User Avatar" class="is-rounded navbar-avatar">
+                                {% endif %}
+                            </p>
+                            <p class="control">
+                                <div class="dropdown" id="user-dropdown">
+                                    <div class="dropdown-trigger">
+                                        <button class="button is-dark" aria-haspopup="true" aria-controls="dropdown-menu">
+                                            <span class="icon is-small">
+                                                <i class="fas fa-angle-down"></i>
+                                            </span>
+                                        </button>
+                                    </div>
+                                    <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                                        <div class="dropdown-content">
+                                            <a href="#" class="dropdown-item is-static">
+                                                <strong>{{ user.email }}</strong>
+                                            </a>
+                                            <hr class="dropdown-divider">
+                                            <form method="post" action="{% url 'logout' %}" style="margin: 0;">
+                                                {% csrf_token %}
+                                                <button type="submit" class="dropdown-item button is-ghost" style="width: 100%; text-align: left; border: none; background: none;">
+                                                    <span class="icon"><i class="fas fa-sign-out-alt"></i></span>
+                                                    <span>Logout</span>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    {% endif %}
+
+    <!-- Messages Display -->
+    {% if messages %}
+    <div class="container" style="margin-top: 1rem;">
+        {% for message in messages %}
+        <div class="notification is-{{ message.tags }} is-light">
+            <button class="delete"></button>
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Main Content -->
+    <div class="main-content">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="content has-text-centered">
+            <p>
+                <strong>Would You Rather</strong> - A fun decision-making game
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Navbar burger toggle
+            const navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+            if (navbarBurgers.length > 0) {
+                navbarBurgers.forEach(el => {
+                    el.addEventListener('click', () => {
+                        const target = el.dataset.target;
+                        const $target = document.getElementById(target);
+                        el.classList.toggle('is-active');
+                        $target.classList.toggle('is-active');
+                    });
+                });
+            }
+
+            // User dropdown toggle
+            const dropdown = document.getElementById('user-dropdown');
+            if (dropdown) {
+                const trigger = dropdown.querySelector('.dropdown-trigger button');
+                trigger.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    dropdown.classList.toggle('is-active');
+                });
+
+                // Close dropdown when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (!dropdown.contains(e.target)) {
+                        dropdown.classList.remove('is-active');
+                    }
+                });
+            }
+
+            // Delete notification
+            const deleteButtons = document.querySelectorAll('.notification .delete');
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    button.parentElement.remove();
+                });
+            });
+
+            // Auto-hide success messages after 5 seconds
+            setTimeout(() => {
+                const successNotifications = document.querySelectorAll('.notification.is-success');
+                successNotifications.forEach(notification => {
+                    notification.style.transition = 'opacity 0.5s';
+                    notification.style.opacity = '0';
+                    setTimeout(() => notification.remove(), 500);
+                });
+            }, 5000);
+        });
+    </script>
+</body>
+</html>

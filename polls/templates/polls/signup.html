@@ -1,0 +1,129 @@
+{% extends 'polls/base.html' %}
+{% load static %}
+
+{% block title %}Sign Up - Would You Rather{% endblock %}
+
+{% block content %}
+<section class="hero is-fullheight is-link">
+    <div class="hero-body">
+        <div class="container">
+            <div class="columns is-centered">
+                <div class="column is-5-tablet is-4-desktop">
+                    <div class="card question-panel">
+                        <header class="card-header has-background-link">
+                            <p class="card-header-title has-text-white is-centered">
+                                <span class="icon"><i class="fas fa-user-plus"></i></span>
+                                <span>Sign Up</span>
+                            </p>
+                        </header>
+                        <div class="card-content">
+                            <div class="content has-text-centered mb-5">
+                                <figure class="image is-128x128 is-inline-block">
+                                    <img src="{% static 'polls/images/default-avatar.png' %}" alt="Signup-icon" class="is-rounded">
+                                </figure>
+                                <h2 class="title is-4 mt-3">Join Us!</h2>
+                                <p class="subtitle is-6">Create your account</p>
+                            </div>
+                            
+                            <form method="post" novalidate>
+                                {% csrf_token %}
+                                
+                                <div class="field">
+                                    <label class="label">Username</label>
+                                    <div class="control has-icons-left">
+                                        {{ form.username }}
+                                        <span class="icon is-small is-left">
+                                            <i class="fas fa-user"></i>
+                                        </span>
+                                    </div>
+                                    {% if form.username.errors %}
+                                        {% for error in form.username.errors %}
+                                        <p class="help is-danger">{{ error }}</p>
+                                        {% endfor %}
+                                    {% else %}
+                                        <p class="help">{{ form.username.help_text }}</p>
+                                    {% endif %}
+                                </div>
+
+                                <div class="field">
+                                    <label class="label">Email</label>
+                                    <div class="control has-icons-left">
+                                        {{ form.email }}
+                                        <span class="icon is-small is-left">
+                                            <i class="fas fa-envelope"></i>
+                                        </span>
+                                    </div>
+                                    {% if form.email.errors %}
+                                        {% for error in form.email.errors %}
+                                        <p class="help is-danger">{{ error }}</p>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+
+                                <div class="field">
+                                    <label class="label">Password</label>
+                                    <div class="control has-icons-left">
+                                        {{ form.password1 }}
+                                        <span class="icon is-small is-left">
+                                            <i class="fas fa-lock"></i>
+                                        </span>
+                                    </div>
+                                    {% if form.password1.errors %}
+                                        {% for error in form.password1.errors %}
+                                        <p class="help is-danger">{{ error }}</p>
+                                        {% endfor %}
+                                    {% else %}
+                                        <p class="help">{{ form.password1.help_text }}</p>
+                                    {% endif %}
+                                </div>
+
+                                <div class="field">
+                                    <label class="label">Confirm Password</label>
+                                    <div class="control has-icons-left">
+                                        {{ form.password2 }}
+                                        <span class="icon is-small is-left">
+                                            <i class="fas fa-lock"></i>
+                                        </span>
+                                    </div>
+                                    {% if form.password2.errors %}
+                                        {% for error in form.password2.errors %}
+                                        <p class="help is-danger">{{ error }}</p>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+
+                                {% if form.non_field_errors %}
+                                <div class="notification is-danger is-light">
+                                    {% for error in form.non_field_errors %}
+                                    {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+
+                                <div class="field">
+                                    <div class="control">
+                                        <button type="submit" class="button is-link is-fullwidth">
+                                            <span class="icon"><i class="fas fa-user-plus"></i></span>
+                                            <span>Create Account</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                            
+                            <hr>
+                            
+                            <div class="has-text-centered">
+                                <p>Already have an account?</p>
+                                <a href="{% url 'login' %}" class="button is-primary is-outlined is-fullwidth mt-3">
+                                    <span class="icon"><i class="fas fa-sign-in-alt"></i></span>
+                                    <span>Login</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

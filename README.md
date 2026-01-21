@@ -1,5 +1,7 @@
 # Would You Rather Django App
 
+Live Link: https://would-you-rather-5va7.onrender.com/
+
 ## Core Application Files
 
 #### **Models & Database**
